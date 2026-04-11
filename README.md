@@ -4,6 +4,8 @@ pieni harjoittelu, perus linux komentoja ja järjestelmän perusominaisuutta. T�
 - **Tarkoitus:** Bandit on tarkoitettu aloittelijoille ja se keskittyy komentorivikäytön, tiedostojärjestelmän ja perus-hakkeroinnin opetteluun.
 - **Teema:** Bandit on parhaiten tunnettu sen simppelistä ja suoraviivaisesta lähestymistavastaan. Haasteet käsittelevät pääasiassa oikeuksia, tiedostoja, hakemistoja ja salasanan murtamista.
 
+![alt text](images/Bandit-page.png)
+
 ## harjoitus linkki:
 [https://overthewire.org/wargames/natas/](https://overthewire.org/wargames/bandit/) <br>
 https://overthewire.org/wargames/ (sama linkki, mutta etusivu)
