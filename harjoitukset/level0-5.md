@@ -889,8 +889,15 @@ Tässä komennossa siis tapahtui **etsi tiedostot, jotka on luettavissa, tasan 1
 
 Jos `-size` koko haluataan suunnittela joustavasti, että antaa tietyn koon
 
+- `find` ei suoraan tue “noin” yhdellä ehdolla, mutta voit antaa välin: `$find -size +900c -size -1100c`
+  - Tämä tarkoittaa etisi yli 900 tavua ja alle 1100 tavua, eli suunnilleen 1000 tavua.
 
+- Jos haluttaisiin rajata koon, esim. täsmälleen niin sitten se on: `-size 1000c` - tasan 1000 tvua
+- Jos suurempi kuin 1000 tavua: `-size +1000c`
+- Jos pienempi kuin 1000 tavua: `-size -1000c`
+- Jos haluat esim. “1000 tai yli”, käytännössä: `-size +999c`
 
+- Entä jos koolla ei ole väliä, sitten ei käytetä tätä `-size`ollenkaan, eli normi komentona ja hakee kaikki toedostot riippumatta koosta: `find -readable ! -executable`
 
 
 # level 6
