@@ -196,3 +196,54 @@ find /home/kali
 ```
 → nopeampi
 → vähemmän virheitä (permission denied)
+
+---
+
+## find-komento – virheiden käsittely (Linux)
+
+Kun käytät find-komentoa koko järjestelmässä `(find /)`, saat usein paljon "Permission denied" -virheitä.
+
+Niitä voi käsitellä kolmella eri tavalla:
+
+---
+
+## 1. Yksinkertaisin tapa (suositeltu)
+
+```
+find / -type f -size 33c -group bandit6 -user bandit7 2>/dev/null
+```
+
+✔ Poistaa virheilmoitukset kokonaan
+✔ Siisti tuloste
+✔ Nopein ja yleisin tapa
+
+---
+
+## 2. Suodatus grepillä
+
+```
+find / -type f -size 33c -group bandit6 -user bandit7 2>&1 | grep -v "Permission denied"
+```
+
+✔ Yhdistää virheet ja tulosteen
+✔ Poistaa vain tietyt virheet
+✔ Joustavampi tapa
+
+---
+
+## 3. Ilman suodatusta (ei suositella)
+
+```
+find / -type f -size 33c -group bandit6 -user bandit7
+```
+
+✘ Näyttää paljon virheitä
+✘ Sekava tuloste
+
+---
+
+## 🧠 Yhteenveto
+
+- `2>/dev/null` = yksinkertaisin ja siistein
+- `grep -v` = joustavampi suodatus
+- ilman mitään = sekava ja vaikea lukea
