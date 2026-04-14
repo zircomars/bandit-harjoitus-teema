@@ -319,7 +319,7 @@ casts   ioE9GbSwKhC394TZ4r9NHYo6yie35lIg
 
 ```
 
-ainakin greppataan - vähä kuin halutaan hakea tämän nimen perusteella ja nämä kaikki voi olla hyvinkin salasana.
+ainakin greppataan - vähä kuin halutaan hakea tämän nimen perusteella ja nämä kaikki voi olla hyvinkin salasana, että viee aika paljon aikaa ja testiä
 
 ```
 bandit7@bandit:~$ grep bandit data.txt
@@ -342,7 +342,7 @@ millions        LjP2QiuoxYAznkJHQVKidbAmM13Gp3p7
 million's       JNJLKl0LlicSC07th2WXWlrL4i6EmMPd
 ```
 
-nyt tehty ja tämä on varmaan se salasana ja testaamalla sitten tiedetään
+nyt tehty ja tämä on varmaan se salasana ja testaamalla sitten tiedetään, koska vihjeenä ja ohjeena on _"millionth"_
 ```
 bandit7@bandit:~$ grep millionth data.txt
 millionth       dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
