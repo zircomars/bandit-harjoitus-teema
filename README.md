@@ -7,7 +7,7 @@ pieni harjoittelu, perus linux komentoja ja j채rjestelm채n perusominaisuutta. T�
 ![alt text](images/Bandit-page.png)
 
 ## harjoitus linkki:
-[https://overthewire.org/wargames/natas/](https://overthewire.org/wargames/bandit/) <br>
+https://overthewire.org/wargames/bandit/ <br>
 https://overthewire.org/wargames/ (sama linkki, mutta etusivu)
 
 ## Miten se toimii ja mit채 t채st채 oppii?
