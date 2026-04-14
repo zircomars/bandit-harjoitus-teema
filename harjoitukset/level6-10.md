@@ -460,4 +460,220 @@ bandit8@bandit:~$ whoami
 bandit8
 bandit8@bandit:~$ ls
 data.txt
+
+
+bandit8@bandit:~$ ll
+total 56
+drwxr-xr-x   2 root    root     4096 Apr  3 15:17 ./
+drwxr-xr-x 150 root    root     4096 Apr  3 15:20 ../
+-rw-r--r--   1 root    root      220 Mar 31  2024 .bash_logout
+-rw-r--r--   1 root    root     3851 Apr  3 15:10 .bashrc
+-rw-r-----   1 bandit9 bandit8 33033 Apr  3 15:17 data.txt
+-rw-r--r--   1 root    root      807 Mar 31  2024 .profile
+bandit8@bandit:~$ ls > data.txt
+-bash: data.txt: Operation not permitted
+bandit8@bandit:~$ cat data.txt
+McfCopsVMkSjH0RczhUpMNz3wj8lByZU
+0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+uoe0s8oZ9OAwOGB3AnlQHuTSUUueK5XZ
+wpslsPAsYxj6MzzHL3EsTAdzhudfmvpE
+...
+.....
+.......
+WKQo7hbxjpBBijzifM5Z3FpZIWzU9SFP
+rNOYB72WEMqUoieQw6sUbTWXdOFrlep8
+DACc77sZL41E2siRkLU5R1zWBBxk3xo4
+Wp09U3tVWYwMcRhXzKhL9UY1SuPFRt9i
+bandit8@bandit:~$
+bandit8@bandit:~$ wc -l data.txt
+1001 data.txt
 ```
+
+mysteerisiä salasanoja joten ei tiedetä mikä noista onkaan ja vie paljon aikaa ja testaamiseen.. ja n. 1001 riviä koodia/salasanaa. Vihje ja ohjeena sanottu se **tapahtuu vain kerran.**
+
+
+Tämä on pieni yhdistelmä kolme työkalua siis komentoja. 
+- `sort` - lajitellaan tiedoston rivit aakkosjärjestyksessä 
+- `uniq -c` - tarkoittaa poistaa peräkkäisiä duplikaattirivejä ja c tarkoittaa laskee montako kertaa kukin rivi esintyy esim. `omena omena banaani` niin tulisi 2 omenaa ja 1 banaani
+- `grep "1"` - tarkoittaa etsii rivejä, jotka sisältävät tekstin "1" (ykkösen + välilyönti). - eli valitaan vain rivit, jotka esiintyivät tasan kerran.
+
+- Toi `grep "1"` - tarkoittaa missä tahansa kohtaa mm. 1 , 11, 159, 1dasf, 91v - eli etsii oletuksena osumia mistä tahansa riviltä sisältää, ei pelkästään kokonaisia numeroita, ja pätee välilyöntiä ja muita merkkejä mm. 11 omena ja 159 omena.
+
+```
+bandit8@bandit:~$ sort data.txt | uniq -c | grep "1 "
+      1 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
+```
+
+pientä omia testejä että tehdään pieni pohdinta liittyen aikaisempaan komentoonsa , että tulostettuna miksi näin:
+eka testi, että ainakin huomataan toi numero 1 toistuu 
+```
+bandit8@bandit:~$ sort data.txt | grep "1"
+0GWwWUcG1DRo7zNiaZXfsSEGaHie3ij0
+0GWwWUcG1DRo7zNiaZXfsSEGaHie3ij0
+0GWwWUcG1DRo7zNiaZXfsSEGaHie3ij0
+0GWwWUcG1DRo7zNiaZXfsSEGaHie3ij0
+0GWwWUcG1DRo7zNiaZXfsSEGaHie3ij0
+0GWwWUcG1DRo7zNiaZXfsSEGaHie3ij0
+0o1vydddtEpnKIsb6kFSbYcq0HPh8Mig
+0o1vydddtEpnKIsb6kFSbYcq0HPh8Mig
+0o1vydddtEpnKIsb6kFSbYcq0HPh8Mig
+0o1vydddtEpnKIsb6kFSbYcq0HPh8Mig
+0o1vydddtEpnKIsb6kFSbYcq0HPh8Mig
+0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+2e82EBdaXT27y7li2PoUKkD8IqsECsL1
+2e82EBdaXT27y7li2PoUKkD8IqsECsL1
+2e82EBdaXT27y7li2PoUKkD8IqsECsL1
+yGsI74pIPDWbp76NVY1l5JTswPPoELzc
+yGsI74pIPDWbp76NVY1l5JTswPPoELzc
+YvYRZxaDl1MJlR9IgY8UWO5fjxwF1wIB
+YvYRZxaDl1MJlR9IgY8UWO5fjxwF1wIB
+YvYRZxaDl1MJlR9IgY8UWO5fjxwF1wIB
+```
+
+toinen testi, että ainoastaan tämä toistui kerran eli missä on yksi & näyttää rivit, jotka esiintyvät tasan kerran (count = 1)
+```
+bandit8@bandit:~$ sort data.txt | uniq -c
+bandit8@bandit:~$ sort data.txt | uniq -c
+     10 0gGmyPWCYc25YtbwSP3kcNZdu9TFIB6s
+     10 0GWwWUcG1DRo7zNiaZXfsSEGaHie3ij0
+     10 0o1vydddtEpnKIsb6kFSbYcq0HPh8Mig
+     10 0YJPG1dC42w6W80WLWO5FuRPKIlHuKQ3
+     10 2e82EBdaXT27y7li2PoUKkD8IqsECsL1
+     10 2voSd7kyMS0vZJ4vuQms4WhOKcM2sJUV
+     10 3AMfEqrsPrROH3Evcy5s5DCtB72Ahj69
+     10 3ifGXW6S8fVx0mfimxwjhnCoB2ddfAbU
+     10 3VFt0jFn4RflJS1uEjLtgwR5ZZMiWGHa
+      1 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
+     10 4mGM8Yu0JIA0MXzlGWu3WFPoMwUvSBp4
+     10 4N82O3SBYWXlQmnsFA7sFoj0BQqxQfpF
+     10 4O3i4AyA1iBWR8hrL62yPNd09fr4dLYD
+     10 4oXVNcmujmCdVGyqMWJ6vDPQ2D8FXVJu
+
+```
+
+
+# level 9
+
+
+
+```
+PS C:\> ssh bandit9@bandit.labs.overthewire.org -p 2220
+                         _                     _ _ _
+                        | |__   __ _ _ __   __| (_) |_
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+bandit9@bandit.labs.overthewire.org's password:
+
+      ,----..            ,----,          .---.
+     /   /   \         ,/   .`|         /. ./|
+    /   .     :      ,`   .'  :     .--'.  ' ;
+   .   /   ;.  \   ;    ;     /    /__./ \ : |
+  .   ;   /  ` ; .'___,/    ,' .--'.  '   \' .
+  ;   |  ; \ ; | |    :     | /___/ \ |    ' '
+  |   :  | ; | ' ;    |.';  ; ;   \  \;      :
+  .   |  ' ' ' : `----'  |  |  \   ;  `      |
+  '   ;  \; /  |     '   :  ;   .   \    .\  ;
+   \   \  ',  /      |   |  '    \   \   ' \ |
+    ;   :    /       '   :  |     :   '  |--"
+     \   \ .'        ;   |.'       \   \ ;
+  www. `---` ver     '---' he       '---" ire.org
+
+
+Welcome to OverTheWire!
+
+If you find any problems, please report them to the #wargames channel on
+discord or IRC.
+
+--[ Playing the games ]--
+
+  This machine might hold several wargames.
+  If you are playing "somegame", then:
+
+    * USERNAMES are somegame0, somegame1, ...
+    * Most LEVELS are stored in /somegame/.
+    * PASSWORDS for each level are stored in /etc/somegame_pass/.
+
+  Write-access to homedirectories is disabled. It is advised to create a
+  working directory with a hard-to-guess name in /tmp/.  You can use the
+  command "mktemp -d" in order to generate a random and hard to guess
+  directory in /tmp/.  Read-access to both /tmp/ is disabled and to /proc
+  restricted so that users cannot snoop on eachother. Files and directories
+  with easily guessable or short names will be periodically deleted! The /tmp
+  directory is regularly wiped.
+  Please play nice:
+
+    * don't leave orphan processes running
+    * don't leave exploit-files laying around
+    * don't annoy other players
+    * don't post passwords or spoilers
+    * again, DONT POST SPOILERS!
+      This includes writeups of your solution on your blog or website!
+
+--[ Tips ]--
+
+  This machine has a 64bit processor and many security-features enabled
+  by default, although ASLR has been switched off.  The following
+  compiler flags might be interesting:
+
+    -m32                    compile for 32bit
+    -fno-stack-protector    disable ProPolice
+    -Wl,-z,norelro          disable relro
+
+  In addition, the execstack tool can be used to flag the stack as
+  executable on ELF binaries.
+
+  Finally, network-access is limited for most levels by a local
+  firewall.
+
+--[ Tools ]--
+
+ For your convenience we have installed a few useful tools which you can find
+ in the following locations:
+
+    * gef (https://github.com/hugsy/gef) in /opt/gef/
+    * pwndbg (https://github.com/pwndbg/pwndbg) in /opt/pwndbg/
+    * gdbinit (https://github.com/gdbinit/Gdbinit) in /opt/gdbinit/
+    * pwntools (https://github.com/Gallopsled/pwntools)
+    * radare2 (http://www.radare.org/)
+
+--[ More information ]--
+
+  For more information regarding individual wargames, visit
+  http://www.overthewire.org/wargames/
+
+  For support, questions or comments, contact us on discord or IRC.
+
+  Enjoy your stay!
+
+bandit9@bandit:~$ whoami
+bandit9
+bandit9@bandit:~$ ls
+data.txt
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
