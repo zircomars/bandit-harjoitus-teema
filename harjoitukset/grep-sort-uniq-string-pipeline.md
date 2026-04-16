@@ -122,3 +122,29 @@ $sort data.txt | uniq -c | grep "1 "
 Yleisimmät rivit:
 $sort data.txt | uniq -c | sort -nr
 ```
+
+# strings
+
+strings on Linux-komento, joka etsii tiedostosta tulostettavia (luettavia) merkkijonoja.
+Esim. malli:
+```
+strings tiedosto.bin | grep -E "user.*="
+```
+
+Se on erityisen hyödyllinen:
+- binääritiedostoissa (.bin, .exe, .dat) & rikkinäistä merkistöä & sekavia merkintöjä/sekava/dataa tiedostojen alla , mutta se sisältää todennäköisesti piilotettua tekstiä seassa
+- tuntemattomissa tiedostoissa
+- reverse engineering -tilanteissa
+- kun epäilet tiedoston sisältävän piilotettua tekstiä
+
+strings suodattaa pois ei-luettavan datan ja näyttää vain tekstin.
+
+
+Tulostaa kaikki luettavat merkkijonot tiedostosta.
+
+Tämä auttaa löytämään:
+- käyttäjänimiä (user=)
+- salasanoja (password=)
+- API-avaimia
+- URL-osoitteita
+- konfiguraatioita
