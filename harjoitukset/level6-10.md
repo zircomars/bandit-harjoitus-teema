@@ -658,12 +658,234 @@ bandit9@bandit:~$ whoami
 bandit9
 bandit9@bandit:~$ ls
 data.txt
+
+
+bandit9@bandit:~$ cat data.txt
+��g�BՈJ��~�{��.�W�u�[�3����E"H� ��r�B��ۿ�տ �lH����%�=�be��(f��b� ���Y��%�u̡�[�j9جY��֣����נ�5."Y[��/(��4�<쓙�6�;�cQ̵x|�������:,�UdL�;^Ğ�l��,�rAV����yOe�Ǽ\�^0O���׳P�|3�CvB�␦c)/��/���Z�v�V$
+4v�;e␦����K�4�|��:�d
+c�U(��?�|���[�Mdt�����{jr��ң�`��~��
+                       s�ύ�-b��>����LLڼ���Pp��[[�H���GO��Ҝ�`K��~�9�Эc.��雷[��v�fP6���KCb���gA䪝�U)v�]�~�
+                                                                                                        j~��Y�okV3�}3���YF
+  ��Ty�M�}��2��?c�:~p�ҋ������ErQ��� ��X���f��kZ�ɺ��z4�&L5�[Z�� ^G9ZpY�pN���N���w���ޤ�,��7Lp�B`W>3��o�(�D�$2K�!��P?�~�d��q��1�ĺsIf3y�vY��Sm�^Ԋ�~h
+                        ð�����B�6�]RDdK��&^�p��煍��!\xc2�Hpi���i���j
+\�5R����u��OЯE~w�I���������`�iqm�'�S�j����*�:и���LϜ��B�Y<�g�=H�"(n� ��2���!��8Ɇ�˱[$�q?:�_�`0����ʆ�;�2�Մ�݇ì��6␦}��D7
+�����m�T��������vc�9|�
+5���l��9�Q[��T�m<"'7ӭ ��%� [6��\�yp���l�O�о���P+�ŴU�
+ wl�z�X9�����Qib~�*k2�����LR��g�Ŵ�ɋ�W����␦���7&�>�'�1�Sc�E��Ϳ�R��P}��F��n�/v-mԀ]�mu�>G�(==��r��]b�������g35{��p"zQ�ˠ�v7�éȪd_�_�dJ�      E�j�7+�:ܾ5��QiR.9+��qr�'qv4
+                                          ��Q����C`�&o�h.�S     ,��t�s�?�%���9ƴq,�h(E9cp�Wcnkt��ܯ�,d��PTK�e�h'���L-P�����m��t,�O���w9�$�D�^&a/����wҢ3h��:��ȡHT5�␦��A��*?ޟ�Z6{K'1�fC�JЫ�Ysb��ۀ��TI�6�4�m�K�J'�҄Ùi=
+�[��jA�<�8����6����&6g�G$���EP}�S}U�'+��V4N]j.�?�J�x��?���n����m�4!�ڹ�!/��l�]{S��I      �=�R����2P�D�N__��p6�uD|7�L�%ʂ��
+bandit9@bandit:~$
 ```
 
 
+salaista koodin tekstiä näyttävä ja salasana on data.txt sisällä kuitenkin, vihjeenä sanotaan pitää käytää ja luettavina stringi jossa edeltää useita '='-merkkejä
+
+muita testiä:
+- `sort` ja `uniq` - komennosta ainakin toistui data.txt sisällönsä
+
+```
+bandit9@bandit:~$ uniq data.txt | grep "="
+grep: (standard input): binary file matches
+bandit9@bandit:~$ sort data.txt |grep "="
+grep: (standard input): binary file matches
+bandit9@bandit:~$ grep "=" data.txt
+grep: data.txt: binary file matches
+bandit9@bandit:~$ strings data.txt | grep "="
+,U=\[
+========== the
+=>XO
+Qe=B
+2========== password
+=5J"
+========== is
+=oFt2
+9=Dc
+Yh6=o
+=d\!#d=
+H/=Q
+========== FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+bWG=cE>
+s=>5j
+[xxhr=*
+```
+
+## strings
+
+strings on Linux-komento, joka etsii tiedostosta tulostettavia (luettavia) merkkijonoja.
+
+Se on erityisen hyödyllinen:
+- binääritiedostoissa (.bin, .exe, .dat) & rikkinäistä merkistöä & sekavia merkintöjä/sekava/dataa tiedostojen alla , mutta se sisältää todennäköisesti piilotettua tekstiä seassa
+- tuntemattomissa tiedostoissa
+- reverse engineering -tilanteissa
+- kun epäilet tiedoston sisältävän piilotettua tekstiä
+
+strings suodattaa pois ei-luettavan datan ja näyttää vain tekstin.
 
 
+Tulostaa kaikki luettavat merkkijonot tiedostosta.
 
+Tämä auttaa löytämään:
+- käyttäjänimiä (user=)
+- salasanoja (password=)
+- API-avaimia
+- URL-osoitteita
+- konfiguraatioita
+
+---
+
+# level 10
+
+OHJE JA VINKKIT: The password for the next level is stored in the file data.txt, which contains base64 encoded data & komennot: grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd
+
+
+```
+PS C:\> ssh bandit10@bandit.labs.overthewire.org -p 2220
+                         _                     _ _ _
+                        | |__   __ _ _ __   __| (_) |_
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+bandit10@bandit.labs.overthewire.org's password:
+
+      ,----..            ,----,          .---.
+     /   /   \         ,/   .`|         /. ./|
+    /   .     :      ,`   .'  :     .--'.  ' ;
+   .   /   ;.  \   ;    ;     /    /__./ \ : |
+  .   ;   /  ` ; .'___,/    ,' .--'.  '   \' .
+  ;   |  ; \ ; | |    :     | /___/ \ |    ' '
+  |   :  | ; | ' ;    |.';  ; ;   \  \;      :
+  .   |  ' ' ' : `----'  |  |  \   ;  `      |
+  '   ;  \; /  |     '   :  ;   .   \    .\  ;
+   \   \  ',  /      |   |  '    \   \   ' \ |
+    ;   :    /       '   :  |     :   '  |--"
+     \   \ .'        ;   |.'       \   \ ;
+  www. `---` ver     '---' he       '---" ire.org
+
+
+Welcome to OverTheWire!
+
+If you find any problems, please report them to the #wargames channel on
+discord or IRC.
+
+--[ Playing the games ]--
+
+  This machine might hold several wargames.
+  If you are playing "somegame", then:
+
+    * USERNAMES are somegame0, somegame1, ...
+    * Most LEVELS are stored in /somegame/.
+    * PASSWORDS for each level are stored in /etc/somegame_pass/.
+
+  Write-access to homedirectories is disabled. It is advised to create a
+  working directory with a hard-to-guess name in /tmp/.  You can use the
+  command "mktemp -d" in order to generate a random and hard to guess
+  directory in /tmp/.  Read-access to both /tmp/ is disabled and to /proc
+  restricted so that users cannot snoop on eachother. Files and directories
+  with easily guessable or short names will be periodically deleted! The /tmp
+  directory is regularly wiped.
+  Please play nice:
+
+    * don't leave orphan processes running
+    * don't leave exploit-files laying around
+    * don't annoy other players
+    * don't post passwords or spoilers
+    * again, DONT POST SPOILERS!
+      This includes writeups of your solution on your blog or website!
+
+--[ Tips ]--
+
+  This machine has a 64bit processor and many security-features enabled
+  by default, although ASLR has been switched off.  The following
+  compiler flags might be interesting:
+
+    -m32                    compile for 32bit
+    -fno-stack-protector    disable ProPolice
+    -Wl,-z,norelro          disable relro
+
+  In addition, the execstack tool can be used to flag the stack as
+  executable on ELF binaries.
+
+  Finally, network-access is limited for most levels by a local
+  firewall.
+
+--[ Tools ]--
+
+ For your convenience we have installed a few useful tools which you can find
+ in the following locations:
+
+    * gef (https://github.com/hugsy/gef) in /opt/gef/
+    * pwndbg (https://github.com/pwndbg/pwndbg) in /opt/pwndbg/
+    * gdbinit (https://github.com/gdbinit/Gdbinit) in /opt/gdbinit/
+    * pwntools (https://github.com/Gallopsled/pwntools)
+    * radare2 (http://www.radare.org/)
+
+--[ More information ]--
+
+  For more information regarding individual wargames, visit
+  http://www.overthewire.org/wargames/
+
+  For support, questions or comments, contact us on discord or IRC.
+
+  Enjoy your stay!
+
+bandit10@bandit:~$ ls
+data.txt
+bandit10@bandit:~$ whoami
+bandit10
+```
+
+Salasana on data.txt alla, että jouduttaan enkoodata ja muuttaa merkintä koska sisältyy just base64
+
+```
+bandit10@bandit:~$ cat data.txt
+VGhlIHBhc3N3b3JkIGlzIGR0UjE3M2ZaS2IwUlJzREZTR3NnMlJXbnBOVmozcVJyCg==
+
+bandit10@bandit:~$ base
+base32    base64    basename  basenc
+bandit10@bandit:~$ base64 data.txt
+VkdobElIQmhjM04zYjNKa0lHbHpJR1IwVWpFM00yWmFTMkl3VWxKelJFWlRSM05uTWxKWGJuQk9W
+bW96Y1ZKeUNnPT0K
+
+
+bandit10@bandit:~$ base64 --help
+Usage: base64 [OPTION]... [FILE]
+Base64 encode or decode FILE, or standard input, to standard output.
+
+With no FILE, or when FILE is -, read standard input.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -d, --decode          decode data
+  -i, --ignore-garbage  when decoding, ignore non-alphabet characters
+  -w, --wrap=COLS       wrap encoded lines after COLS character (default 76).
+                          Use 0 to disable line wrapping
+      --help        display this help and exit
+      --version     output version information and exit
+
+The data are encoded as described for the base64 alphabet in RFC 4648.
+When decoding, the input may contain newlines in addition to the bytes of
+the formal base64 alphabet.  Use --ignore-garbage to attempt to recover
+from any other non-alphabet bytes in the encoded stream.
+
+GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Full documentation <https://www.gnu.org/software/coreutils/base64>
+or available locally via: info '(coreutils) base64 invocation'
+
+bandit10@bandit:~$ base64 -d data.txt
+The password is dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+
+```
+
+Toinen vaihtoehtoinen vastaus, mutta toimii:
+```
+bandit10@bandit:~$ cat data.txt  | base64 -d
+The password is dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+```
 
 
 
