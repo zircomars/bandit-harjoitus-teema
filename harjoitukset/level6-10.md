@@ -553,10 +553,7 @@ bandit8@bandit:~$ sort data.txt | uniq -c
      10 4N82O3SBYWXlQmnsFA7sFoj0BQqxQfpF
      10 4O3i4AyA1iBWR8hrL62yPNd09fr4dLYD
      10 4oXVNcmujmCdVGyqMWJ6vDPQ2D8FXVJu
-
 ```
-
-
 # level 9
 
 
