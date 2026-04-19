@@ -1,7 +1,7 @@
 # Lyhyesti
 
 
-# grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd, mkdir, cp, mv, file
+## grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd, mkdir, cp, mv, file
 
 ```
 > whatis grep
