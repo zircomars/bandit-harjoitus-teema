@@ -1,5 +1,7 @@
 # Lyhyesti
 
+Osassa markdow tasosta nimettynä esim. 11-12, koska alla komennot on pitkiä, että tarkennettu yksityiskohtaisesti miten se toimii, miksi näin ja pieni teoria selostus lyhyesti
+
 
 ## grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd, mkdir, cp, mv, file
 
