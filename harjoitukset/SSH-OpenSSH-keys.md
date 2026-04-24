@@ -50,9 +50,176 @@ Lisätietoa ja lukemista:
 - https://help.ubuntu.com/community/SSH/OpenSSH/Keys
 - https://www.kapsi.fi/ohjeet/ssh-avain.html
 - https://www.cs.helsinki.fi/group/kuje/compfac/ssh_avain.html
+
 ---
 
-## 🔐 SSH-avaimen varmuuskopiointi – Nopea ohje
+## Avaimen luonti (generointi)
+
+1. Toimii suoraan, jos käytössä on OpenSSH (nykyään mukana Windowsissa oletuksena).
+2. Komento voi suoraan ajaa käytössä OpenSSH (nykyään mukaan Windows oletuskena) ja sama pätee Linux ja MacOs laiteilla komennolla:
+```
+ssh-keygen -t ed25519 -C "oma_sahkoposti@example.com"
+```
+
+Mitä tämä tekee?
+- `ssh-keygen` → työkalu avainten luontiin
+- `-t ed25519` → avaintyppi (suositeltu)
+- `-C` → kommentti (vapaa teksti, EI pakollinen)
+  - Jos saa virheen “ssh-keygen not found”: OpenSSH ei ole asennettu → pitää lisätä Windowsin ominaisuuksista
+
+ilman sähhköpostia:
+- Pitääkö olla oikea sähköposti? Ei tarvitse.
+- Voit käyttää mitä tahansa tunnistetta: `$ssh-keygen -t ed25519 -C "oma_kone"`
+tai
+- `$ssh-keygen -t ed25519 -C "matti"`
+  - Tämä on vain label / nimi, ei vaikuta turvallisuuteen.
+
+3. Tallennuspaikka
+
+Saat kysymyksen: `Enter file in which to save the key:` - ihan näppäimistö "Enter" niin se tallentuu tiettyyn paikkaan.
+
+- Windows: C:\Users\Käyttäjä\.ssh\id_ed25519
+- Linux/macOS: ~/.ssh/id_ed25519
+
+4. Passphrase (lisäsuoja)
+
+Saat kysymyksen: `Enter passphrase:`
+
+Mikä tämä on?
+- Lisäsalasana avaimelle
+- Suojaa jos tiedosto varastetaan
+
+Voit:
+- jättää tyhjäksi (Enter) ❌ (ei suositella)
+- asettaa salasanan ✅ (suositeltu)
+
+Hyvä passphrase:
+- pitkä (esim. useita sanoja)
+- helppo muistaa, vaikea arvata
+
+5. Mitä tiedostoja syntyy?
+- id_ed25519       ← YKSITYINEN (älä jaa!)
+- id_ed25519.pub   ← JULKINEN (tämä jaetaan)
+
+6. Muut avaintyypit
+
+Suositus: 
+- ed25519 ⭐ (paras useimmille)
+
+Muut vaihtoehdot:
+- RSA (vanhempi mutta käytetty)
+- `$ssh-keygen -t rsa -b 4096 -C "kommentti"`
+  
+ECDSA:
+- `$ssh-keygen -t ecdsa -C "kommentti"`
+
+7. Julkisen avaimen lisääminen palvelimelle
+
+Helpoin tapa:
+- `ssh-copy-id käyttäjä@palvelin`
+- Jos tämä ei toimi (esim. Windows):
+  - Manuaalisesti:
+    - Avaa .pub tiedosto
+    - Kopioi sisältö
+    - Lisää palvelimella tiedostoon: `~/.ssh/authorized_keys`
+   
+8. Kirjautuminen
+
+`$ssh käyttäjä@palvelin`
+- Nyt:
+  - salasanaa ei kysytä
+  - vain passphrase (jos asetettu)
+
+9. Mitä “autentikointi” tarkoittaa?
+
+Autentikointi = todistat kuka olet
+
+- SSH-avaimilla:
+  - palvelin tarkistaa avaimen
+  - et lähetä salasanaa verkkoon
+
+10. Tärkeät säännöt
+- älä jaa `id_ed25519` ja älä jaa sitä nettiin tai mihikään julkiseen repositorille
+- tästä saa `.pub` tiedoston ja käytä avainta kirjauttumisessa
+
+11. (Valinnainen) ssh-agent
+
+- Jotta ei tarvitse kirjoittaa passphrasea aina:
+
+```
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+---
+
+### SSH kirjautuminen – salasana vs SSH-avain
+
+Perusidea
+- SSH voit kirjautua kahdella tavalla:
+  - Salasanalla
+  - SSH-avaimella
+
+SSH-avain ei ole lisäosa, vaan eri kirjautumistapa
+
+Vertailu
+
+| Ominaisuus | Salasana | SSH-avain |
+|-----------|----------|-----------|
+| Kirjautuminen | Syötät salasanan | Avain tunnistaa sinut |
+| Turvallisuus | Heikompi | Vahvempi |
+| Käyttömukavuus | Kirjoitat aina | Voi toimia ilman syöttöä |
+| Brute force -suoja | Huono | Hyvä |
+| Tarvitsee tiedoston | Ei | Kyllä |
+| Verkkoon lähetettävä tieto | Salasana | Ei salasanaa |
+
+
+Salasana vs Passphrase
+
+| Asia | Salasana | Passphrase |
+|------|----------|------------|
+| Käyttö | Kirjautuminen palvelimelle | Avaimen lukituksen avaaminen |
+| Sijainti | Palvelin | Oma kone |
+| Pakollinen | Usein | Ei |
+| Turvallisuus | Perus | Lisäsuoja |
+
+
+- Kirjautuminen käytännössä
+```
+>Salasana:
+ssh käyttäjä@localhost
+Password: ****
+
+> SSH-avain:
+ssh käyttäjä@localhost
+Enter passphrase for key: ****
+
+>SSH-avain + ssh-agent:
+ssh käyttäjä@localhost
+```
+
+Tärkeimmät erot
+
+| Asia | Selitys |
+|------|--------|
+| SSH-avain | Korvaa salasanan |
+| Passphrase | Ei ole sama kuin salasana |
+| Julkinen avain | Jaetaan palvelimelle |
+| Yksityinen avain | Ei koskaan jaeta |
+
+Turvallisuuskäytäntö
+
+| Toimenpide | Suositus |
+|-----------|----------|
+| Käytä SSH-avainta | Kyllä |
+| Aseta passphrase | Kyllä |
+| Poista salasana-login | Kyllä |
+| Jaa private key | Ei |
+| Jaa public key | Kyllä |
+
+---
+
+## SSH-avaimen varmuuskopiointi – Nopea ohje
 
 - Tee varmuuskopio **heti kun avain luodaan**
 - Säilytä vähintään **2 kopiota** (aktiivinen + varmuuskopio)
@@ -72,7 +239,7 @@ Lisätietoa ja lukemista:
 | Avaimen katoaminen | Palauta varmuuskopiosta | Nopea palautus | Ilman backupia kaikki uusiksi | Testaa palautus etukäteen |
 | Avaimen vuoto | Luo uusi avain ja poista vanha | Estää väärinkäytön | Hyökkääjä pääsee sisään | Reagoi heti |
 
-## 🔐 SSH-avaimen oikeudet (OpenSSH)
+## SSH-avaimen oikeudet (OpenSSH)
 
 - Yksityinen avain pitää olla **vain omistajan luettavissa**
 - Jos muilla on pääsy → SSH hylkää avaimen
@@ -87,7 +254,7 @@ Lisätietoa ja lukemista:
 | Windows (PowerShell) | Yksityinen avain | `icacls key /grant:r "<user>:(R)"` | Antaa vain käyttäjälle lukuoikeuden | Vastaa `chmod 600` |
 | Windows (PowerShell) | `.ssh` kansio | `icacls .ssh /inheritance:r` + grant | Rajoittaa kansion pääsyn | Suojaa avaimet |
 
-## ⚠️ Yleisimmät virheet
+## Yleisimmät virheet
 
 | Virhe | Mitä tapahtuu | Korjaus |
 |------|--------------|--------|
