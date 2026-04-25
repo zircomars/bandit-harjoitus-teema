@@ -250,6 +250,96 @@ Tärkeät huomiot
 - private keyn vuoto = sertifikaatti pitää peruuttaa
 - automatisointi (esim. cron, scripts) suositeltavaa
 
+### SSL/TLS - elinkaari, kustannukset ja vanheneminen (FAQ)
+
+1. Kannattaako käyttää samaa sertifikaattia pitkään?
+
+- ei yleensä
+- sertifikaatteja ei ole tarkoitettu pysyvään käyttöön
+- suositus:
+  - lyhyt voimassaoloaika
+  - säännöllinen uusiminen
+
+- hyödyt:
+  - pienempi riski jos private key vuotaa
+  - parempi tietoturvan ylläpito
+
+
+2. Onko SSL/TLS maksullinen?
+
+- on sekä ilmaisia että maksullisia vaihtoehtoja
+
+Ilmainen:
+- Let's Encrypt
+- yleensä 90 päivän voimassaolo
+- automaattinen uusiminen mahdollista
+
+Maksullinen:
+- DigiCert, GlobalSign jne.
+- yrityskäyttöön
+- lisäominaisuuksia (esim. laajempi validointi)
+
+- käytännössä:
+  - suurin osa sivuista käyttää ilmaista sertifikaattia
+
+
+3. Mitä tapahtuu jos sertifikaatti vanhenee?
+
+- selain näyttää varoituksen (ei suojattu yhteys)
+- käyttäjät eivät voi luottaa sivuun
+- osa palveluista voi lakata toimimasta
+- API-yhteydet voivat rikkoutua
+
+- lopputulos:
+  - palvelu voi olla käytännössä käyttökelvoton
+
+
+4. Tuleeko siitä kalliimpaa jos unohtaa uusia?
+
+- ei suoraa rahallista sakkoa
+- mutta epäsuorat kustannukset:
+
+- palvelukatko (downtime)
+- asiakkaiden menetys
+- mainehaitta
+- kiireellinen korjaustyö
+
+
+5. Mitä pitäisi tehdä käytännössä?
+
+- automatisoi uusiminen (esim. certbot + cron)
+- käytä hälytyksiä ennen vanhenemista (30 päivää ennen)
+- älä odota viimeiseen päivään
+- testaa uusiminen ennen tuotantoa
+
+
+6. FAQ
+
+Q: Voiko samaa sertifikaattia käyttää uudelleen?
+- ei suositella, aina uusitaan
+
+Q: Vaihtuuko private key aina?
+- suositus: kyllä, mutta ei pakollinen
+
+Q: Mitä jos private key vuotaa?
+- sertifikaatti pitää peruuttaa ja luoda uusi
+
+Q: Voiko vanhentuneen sertifikaatin korjata?
+- ei, pitää luoda uusi
+
+Q: Onko ilmainen riittävä?
+- kyllä suurimmassa osassa tapauksista
+
+
+7. Yhteenveto
+
+- SSL/TLS ei ole kertaluontoinen asia
+- se on jatkuva ylläpito ja hallinta
+- tärkeintä:
+  - uusiminen ajoissa
+  - automaatio
+  - private keyn suojaus
+
 ---
 
 ## lisätietoa ja lukemista:
