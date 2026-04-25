@@ -359,4 +359,199 @@ linkit, vinkit ja lisätietoa:
 
 # level 14
 
+Nyt ollaan taso 14, että aikaisemman salasanan perusteella ja näin ei tarvitse joka kerta kysellä sitä sshkey avainta. 
+
+Tämän taso seuraava ohje ja vinkkit: The password for the next level can be retrieved by submitting the password of the current level to port 30000 on localhost. Komentoja: ssh, telnet, nc, openssl, s_client, nmap
+
+
+```
+PS C:\Users\zhao-> ssh bandit14@bandit.labs.overthewire.org -p 2220
+                         _                     _ _ _
+                        | |__   __ _ _ __   __| (_) |_
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-0
+bandit14@bandit.labs.overthewire.org's password:
+
+      ,----..            ,----,          .---.
+     /   /   \         ,/   .`|         /. ./|
+    /   .     :      ,`   .'  :     .--'.  ' ;
+   .   /   ;.  \   ;    ;     /    /__./ \ : |
+  .   ;   /  ` ; .'___,/    ,' .--'.  '   \' .
+  ;   |  ; \ ; | |    :     | /___/ \ |    ' '
+  |   :  | ; | ' ;    |.';  ; ;   \  \;      :
+  .   |  ' ' ' : `----'  |  |  \   ;  `      |
+  '   ;  \; /  |     '   :  ;   .   \    .\  ;
+   \   \  ',  /      |   |  '    \   \   ' \ |
+    ;   :    /       '   :  |     :   '  |--"
+     \   \ .'        ;   |.'       \   \ ;
+  www. `---` ver     '---' he       '---" ire.org
+
+
+Welcome to OverTheWire!
+
+If you find any problems, please report them to the #wargames channel on
+discord or IRC.
+
+--[ Playing the games ]--
+
+  This machine might hold several wargames.
+  If you are playing "somegame", then:
+
+    * USERNAMES are somegame0, somegame1, ...
+    * Most LEVELS are stored in /somegame/.
+    * PASSWORDS for each level are stored in /etc/somegame_pass/.
+
+  Write-access to homedirectories is disabled. It is advised to create a
+  working directory with a hard-to-guess name in /tmp/.  You can use the
+  command "mktemp -d" in order to generate a random and hard to guess
+  directory in /tmp/.  Read-access to both /tmp/ is disabled and to /proc
+  restricted so that users cannot snoop on eachother. Files and directories
+  with easily guessable or short names will be periodically deleted! The /tmp
+  directory is regularly wiped.
+  Please play nice:
+
+    * don't leave orphan processes running
+    * don't leave exploit-files laying around
+    * don't annoy other players
+    * don't post passwords or spoilers
+    * again, DONT POST SPOILERS!
+      This includes writeups of your solution on your blog or website!
+
+--[ Tips ]--
+
+  This machine has a 64bit processor and many security-features enabled
+  by default, although ASLR has been switched off.  The following
+  compiler flags might be interesting:
+
+    -m32                    compile for 32bit
+    -fno-stack-protector    disable ProPolice
+    -Wl,-z,norelro          disable relro
+
+  In addition, the execstack tool can be used to flag the stack as
+  executable on ELF binaries.
+
+  Finally, network-access is limited for most levels by a local
+  firewall.
+
+--[ Tools ]--
+
+ For your convenience we have installed a few useful tools which you can find
+ in the following locations:
+
+    * gef (https://github.com/hugsy/gef) in /opt/gef/
+    * pwndbg (https://github.com/pwndbg/pwndbg) in /opt/pwndbg/
+    * gdbinit (https://github.com/gdbinit/Gdbinit) in /opt/gdbinit/
+    * pwntools (https://github.com/Gallopsled/pwntools)
+    * radare2 (http://www.radare.org/)
+
+--[ More information ]--
+
+  For more information regarding individual wargames, visit
+  http://www.overthewire.org/wargames/
+
+  For support, questions or comments, contact us on discord or IRC.
+
+  Enjoy your stay!
+
+bandit14@bandit:~$ ls
+bandit14@bandit:~$ whoami
+bandit14
+```
+
+## Harjoitus - start here;
+
+ohjeen ja vinkin mukaan päästään seuraavaan käyttäen levelin porttia 30 000
+
+```
+bandit14@bandit:~$ nc --help
+nc: invalid option -- '-'
+usage: nc [-46CDdFhklNnrStUuvZz] [-I length] [-i interval] [-M ttl]
+          [-m minttl] [-O length] [-P proxy_username] [-p source_port]
+          [-q seconds] [-s sourceaddr] [-T keyword] [-V rtable] [-W recvlimit]
+          [-w timeout] [-X proxy_protocol] [-x proxy_address[:port]]
+          [destination] [port]
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14 | nc localhost 30000
+Correct!
+8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14 | nmap localhost 30000
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-04-24 09:30 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000077s latency).
+Not shown: 993 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+1111/tcp  open  lmsocialserver
+1840/tcp  open  netopia-vo2
+4321/tcp  open  rwhois
+8000/tcp  open  http-alt
+30000/tcp open  ndmps
+50001/tcp open  unknown
+
+Nmap scan report for 30000 (0.0.117.48)
+Host is up (0.000046s latency).
+All 1000 scanned ports on 30000 (0.0.117.48) are in ignored states.
+Not shown: 1000 closed tcp ports (conn-refused)
+
+Nmap done: 2 IP addresses (2 hosts up) scanned in 2.66 seconds
+
+bandit14@bandit:~$ cd /etc/bandit_pass/
+bandit14@bandit:/etc/bandit_pass$ ls
+bandit0   bandit11  bandit14  bandit17  bandit2   bandit22  bandit25  bandit28  bandit30  bandit33  bandit6  bandit9
+bandit1   bandit12  bandit15  bandit18  bandit20  bandit23  bandit26  bandit29  bandit31  bandit4   bandit7
+bandit10  bandit13  bandit16  bandit19  bandit21  bandit24  bandit27  bandit3   bandit32  bandit5   bandit8
+bandit14@bandit:/etc/bandit_pass$ nmap -v bandit15
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-04-24 09:33 UTC
+Failed to resolve "bandit15".
+Read data files from: /usr/bin/../share/nmap
+WARNING: No targets were specified, so 0 hosts scanned.
+Nmap done: 0 IP addresses (0 hosts up) scanned in 10.07 seconds
+bandit14@bandit:/etc/bandit_pass$ nmap localhost 30000
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-04-24 09:33 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00012s latency).
+Not shown: 993 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+1111/tcp  open  lmsocialserver
+1840/tcp  open  netopia-vo2
+4321/tcp  open  rwhois
+8000/tcp  open  http-alt
+30000/tcp open  ndmps
+50001/tcp open  unknown
+
+Nmap scan report for 30000 (0.0.117.48)
+Host is up (0.000074s latency).
+All 1000 scanned ports on 30000 (0.0.117.48) are in ignored states.
+Not shown: 1000 closed tcp ports (conn-refused)
+
+Nmap done: 2 IP addresses (2 hosts up) scanned in 2.79 seconds
+
+```
+
+
+tämä on se vastaus, mutta miksi näin?
+- `nc` - komento netcat - joka avaa TCP yhteyden koneeseen loclahost porttiin 3000
+- nc komenolla voi tarkistaa porttinumeron oiskin yhteydessä TCP/UDP
+- periaatteessa komennossa jälkimmäisessä osassa tarkoittaa localhost (kohde/mihin yhdistetään ja sama idea IP-osoite) ja mikä portti missä koputtaa siinä vaiheessa.
+- `nc <kohde> <portti>`
+```
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14 | nc localhost 30000
+Correct!
+8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+```
+
+muita esimerkkejä:
+```
+nc google.com 80      # web-palvelin
+nc localhost 22       # SSH omassa koneessa
+nc 192.168.1.10 443   # HTTPS toisessa koneessa
+```
 
