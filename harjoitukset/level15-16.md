@@ -896,3 +896,9 @@ kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
 
 closed
 ```
+
+## linkkejä ja ohjeita:
+
+- https://mayadevbe.me/posts/overthewire/bandit/level16/
+- https://medium.com/secttp/overthewire-bandit-level-15-223a2f5a940d
+- https://medium.com/@pophacker996/overthewire-bandit-level-15-25-solutions-7e9b7121aa47
