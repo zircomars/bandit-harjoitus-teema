@@ -339,6 +339,84 @@ Q: Onko ilmainen riittävä?
   - uusiminen ajoissa
   - automaatio
   - private keyn suojaus
+ 
+## SSL/TLS - private key säilyttäminen ja vuotaminen
+
+1. Private keyn säilyttäminen
+
+- private key on tärkein osa koko TLS-suojausta
+- jos se vuotaa, koko suojaus on käytännössä murrettu
+
+- säilytys:
+  - vain palvelimella jossa sitä tarvitaan
+  - ei jaeta muille
+  - ei versionhallintaan (Git jne.)
+
+- käyttöoikeudet:
+  - rajattu vain tarvittaville käyttäjille
+  - esim. Linux:
+    chmod 600 private.key
+
+- turvallinen säilytys:
+  - salattu levy tai tiedosto
+  - key vault / secret manager
+  - HSM (Hardware Security Module)
+
+- varmuuskopio:
+  - salattuna
+  - eri sijainnissa
+  - ei julkisesti saatavilla
+
+
+2. Mitä tapahtuu jos private key vuotaa?
+
+- hyökkääjä voi:
+  - esiintyä palvelimena (impersonation)
+  - purkaa liikennettä (jos muita heikkouksia)
+  - tehdä man-in-the-middle -hyökkäyksiä
+
+- seuraukset:
+  - käyttäjien data voi vaarantua
+  - luottamus menetetään
+  - mahdollinen tietoturvaloukkaus
+
+
+3. Mitä tehdä jos vuoto tapahtuu?
+
+- toimi heti:
+
+  1. peruuta (revoke) sertifikaatti
+  2. luo uusi private key
+  3. luo uusi sertifikaatti
+  4. ota uusi käyttöön palvelimella
+
+- tarkista:
+  - lokit (onko väärinkäyttöä)
+  - mistä vuoto tapahtui
+
+
+4. Miten estää vuoto?
+
+- älä lähetä private keyta sähköpostilla
+- älä tallenna suojaamattomana
+- käytä vahvoja käyttöoikeuksia
+- käytä salattuja varmuuskopioita
+- rajoita pääsy (least privilege)
+
+- lisäsuoja:
+  - HSM tai key vault
+  - MFA pääsyyn
+
+5. Yhteenveto
+
+- private key = tärkein osa TLS:ää
+- sen vuoto = vakava tietoturvaongelma
+- suojaus:
+  - rajoitettu pääsy
+  - salaus
+  - turvallinen säilytys
+- vuototilanne:
+  - revoke + uusi key + uusi sertifikaatti heti
 
 ---
 
