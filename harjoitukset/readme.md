@@ -2,6 +2,41 @@
 
 Osassa markdow tasosta nimettynä esim. 11-12, koska alla komennot on pitkiä, että tarkennettu yksityiskohtaisesti miten se toimii, miksi näin ja pieni teoria selostus lyhyesti. Sekä taso menee kokoajan vaikeammaksi ja vaikeammaksi, että sisältyen ohje ja vinkki, että mitä komentoja X-tasossa tarvittaan ja käytettään
 
+## # Verkkotyökalut - nc, ncat, socat, openssl, s_client, nmap, netstat, ss
+
+```
+> whatis nc
+nc (1)               - TCP/UDP-yhteyksien avaamiseen ja kuunteluun
+- käyttö: nc [optiot] [kohde] [portti]
+
+> whatis ncat
+ncat (1)             - verkkotyökalu datan lähettämiseen ja vastaanottamiseen (tukee myös SSL/TLS)
+- käyttö: ncat [optiot] [kohde] [portti]
+
+> whatis socat
+socat (1)            - monipuolinen työkalu kahden datavirran yhdistämiseen
+- käyttö: socat [optiot] [lähde] [kohde]
+
+> whatis openssl
+openssl (1)          - työkalu salaustoimintoihin ja SSL/TLS-sertifikaattien hallintaan
+- käyttö: openssl [komento] [optiot]
+
+> whatis s_client
+s_client (1)         - SSL/TLS-client yhteyksien testaamiseen (OpenSSL-alikomento)
+- käyttö: openssl s_client [optiot] -connect [kohde:portti]
+
+> whatis nmap
+nmap (1)             - verkon kartoitus- ja porttiskannaustyökalu
+- käyttö: nmap [optiot] [kohde]
+
+> whatis netstat
+netstat (8)          - näyttää verkkoyhteydet, portit ja reititystaulut
+- käyttö: netstat [optiot]
+
+> whatis ss
+ss (8)               - moderni työkalu socket- ja verkkotietojen tarkasteluun
+- käyttö: ss [optiot]
+```
 
 ## grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd, mkdir, cp, mv, file
 
