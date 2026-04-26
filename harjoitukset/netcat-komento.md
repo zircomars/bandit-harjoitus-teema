@@ -36,7 +36,7 @@ usage: nc [-46CDdFhklNnrStUuvZz] [-I length] [-i interval] [-M ttl]
           [-q seconds] [-s sourceaddr] [-T keyword] [-V rtable] [-W recvlimit]
           [-w timeout] [-X proxy_protocol] [-x proxy_address[:port]]
           [destination] [port]
-`` 
+```
 
 perusmuoto
 ```
