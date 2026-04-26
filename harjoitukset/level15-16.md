@@ -5,7 +5,7 @@ VIHJE JA OHJE: The password for the next level can be retrieved by submitting th
 
 
 ```
-PS C:\Users\zhao-> ssh bandit15@bandit.labs.overthewire.org -p 2220
+PS C:\Users\zirco-> ssh bandit15@bandit.labs.overthewire.org -p 2220
                          _                     _ _ _
                         | |__   __ _ _ __   __| (_) |_
                         | '_ \ / _` | '_ \ / _` | | __|
