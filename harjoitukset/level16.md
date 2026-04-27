@@ -606,3 +606,10 @@ kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
 bandit16@bandit:~$ cat /etc/bandit_pass/bandit16 | openssl s_client -quiet -connect localhost:31046
 4067F0F7FF7F0000:error:0A0000F4:SSL routines:ossl_statem_client_read_transition:unexpected message:../ssl/statem/statem_clnt.c:398:
 ```
+
+---
+
+## ratkaisu
+
+Sekä huomoina näiden kolmen lohkossa (RSA certificate) ovat sama X.509-varmenne. 
+
