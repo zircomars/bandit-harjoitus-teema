@@ -200,7 +200,7 @@ meidän pitää nyt tietää se salasana, joka just tähän kohdistuva "milliont
 
 
 ```
-PS C:\Users\zhao-> ssh bandit7@bandit.labs.overthewire.org -p 2220
+PS C:\Users\zirco-> ssh bandit7@bandit.labs.overthewire.org -p 2220
                          _                     _ _ _
                         | |__   __ _ _ __   __| (_) |_
                         | '_ \ / _` | '_ \ / _` | | __|
