@@ -49,9 +49,23 @@ bandit17@bandit:~$ diff passwords.old passwords.new
 
 ```
 
+vastaus: x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
 
+```
 
-
+bandit17@bandit:~$ diff -u passwords.old passwords.new
+--- passwords.old       2026-04-03 15:17:25.580141500 +0000
++++ passwords.new       2026-04-03 15:17:25.584253266 +0000
+@@ -39,7 +39,7 @@
+ RbNK7oUO0l50r8xbQFBMngXjP4PosdxI
+ tA9dxz3SyAam2tiruMl4mB5CocAYTBP9
+ I9IZK0CIWzeGdik4YD9bATBufq1fr9ON
+-KxOU4IzbXM8j8HeAWPAXTd1eC77mp1qV
++x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
+ SlNJjK3d31Mr3jtNETeMLcrZ7Yx2izqR
+ c6xvvFLhpp6EsauHO5E5I2k5Jmslv49K
+ 4kHcF6SFl6wZQIQofBBlaFjvjL89X4UH
+```
 
 ## diff komento
 
@@ -60,7 +74,9 @@ Se kertoo esimerkiksi:
 - mitä rivejä on lisätty
 - mitä rivejä on muutettu
 
-esim. `$diff tiedosto1.txt tiedosto2.txt`
+- esim1. `$diff tiedosto1.txt tiedosto2.txt`
+- esim2. `$diff -u tiedosto1.txt tiedosto2.txt`
+- esim3. `$diff -r kansio1 kansio2` - vertaa kaikki tiedostot kansiossa 1 ja 2 ja ikään kuin läpikäynti koskien jos on alikansiot ja mitä tiedostoja alla onkaan.
 
 ```
 bandit17@bandit:~$ diff --help
@@ -165,3 +181,4 @@ Report bugs to: bug-diffutils@gnu.org
 GNU diffutils home page: <https://www.gnu.org/software/diffutils/>
 General help using GNU software: <https://www.gnu.org/gethelp/>
 ```
+
