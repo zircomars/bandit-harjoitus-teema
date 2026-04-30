@@ -70,3 +70,11 @@ mv (1)               - move (rename) files
 > whatis file
 file (1)             - determine file type
 ```
+
+
+## muita hyödyllisiä komentoja
+
+```
+> whatis doff
+doff (1)             - read file inside what's difference
+```
