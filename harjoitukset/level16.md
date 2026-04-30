@@ -918,6 +918,14 @@ bandit17@bandit:~$ cat /etc/bandit_pass/bandit17
 EReVavePLFHtFlFsjn3hyzMlvSuSAcRD
 ```
 
+## linkkiä ja lisätietoa 
+
+pientä lukemista ja vertailua tähän taso 16:
+- https://david-varghese.medium.com/overthewire-bandit-level-16-level-17-c137701b3af1
+- https://mayadevbe.me/posts/overthewire/bandit/level17/
+
+
+
 # level 17
 
 Jatkossa voi kirjautua tällä salasanalla, ettei tarvi palata takaisin tasoon 16: EReVavePLFHtFlFsjn3hyzMlvSuSAcRD
