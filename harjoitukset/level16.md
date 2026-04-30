@@ -107,7 +107,7 @@ bandit16@bandit:~$ ls
 bandit16@bandit:~
 ```
 
-## testejä ja tarkistusta
+## testejä ja tarkistusta 1
 
 ```
 bandit16@bandit:~$ nmap -p 31000-32000 localhost
@@ -609,7 +609,316 @@ bandit16@bandit:~$ cat /etc/bandit_pass/bandit16 | openssl s_client -quiet -conn
 
 ---
 
-## ratkaisu
+---
 
-Sekä huomoina näiden kolmen lohkossa (RSA certificate) ovat sama X.509-varmenne. 
+## testejä ja tarkistusta 2
+
+Sekä huomoina näiden kolmen lohkossa (RSA certificate) ovat sama X.509-varmenne. Tästä tuli muutamia säätöjä. Eli ratkaisu on toistaa noita avoimia portteja eli 31000 ja 32000 väliltä, mitkä on auki ja niistä tarkistellan yksittelen.
+
+```
+bandit16@bandit:~$ nmap -p 31000-32000 localhost
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-04-29 08:15 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00018s latency).
+Not shown: 996 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+31046/tcp open  unknown
+31518/tcp open  unknown
+31691/tcp open  unknown
+31790/tcp open  unknown
+31960/tcp open  unknown
+```
+
+Yksittäisen tarkistus esim. komennolla: 
+```
+$openssl s_client -connect localhost:31046
+```
+
+Melkein jokaisessa tuli certificate vastaus, että koko Base64-sisältö on identtinen rivi riviltä, eli kyseessä on sama X.509-sertifikaatti (todennäköisesti sama private key / sama palvelu tai load balancer kopioi sen useaan porttiin).
+
+Tein tämän tarkistuksensa, koska Bandit16 on se vastaus - koska ollaan sisällä:
+```
+bandit16@bandit:~$ cat /etc/bandit_pass/bandit16
+kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
+```
+
+
+Kuitenkin mitä neuvoksi, seuraavaksi luottiin `/tmp` polkuun joku kansio ja siihen alle suoritettaan aikaisempi tason menetelmänsä eli SSH avaimen kautta kirjauduttaan sisään.
+
+```
+bandit16@bandit:/tmp$ mkdir /tmp/random_sshkey1
+bandit16@bandit:/tmp$ cd /tmp/random_sshkey1
+bandit16@bandit:/tmp/random_sshkey1$ ls
+bandit16@bandit:/tmp/random_sshkey1$ touch private.key
+bandit16@bandit:/tmp/random_sshkey1$ vim private.key
+```
+
+liitä se --RSA PRIVATKEY--
+Kirjoita:
+(kaksoismerkki pitää tulla mukaan)
+- `:w`
+- `:wq` → tallenna ja poistu
+- `:wq!` → pakota tallennus (jos esim. oikeudet rajoittaa)
+
+tämä on oma vim tiedosto luonti juttu
+
+```
+bandit16@bandit:/tmp/random_sshkey1$ chmod 400 private.key
+bandit16@bandit:/tmp/random_sshkey1$ ls
+private.key
+bandit16@bandit:/tmp/random_sshkey1$ ls -l
+total 4
+-r-------- 1 bandit16 bandit16 1805 Apr 29 08:45 private.key
+
+
+bandit16@bandit:/tmp/random_sshkey1$ ssh -i private.key
+usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface] [-b bind_address]
+           [-c cipher_spec] [-D [bind_address:]port] [-E log_file]
+           [-e escape_char] [-F configfile] [-I pkcs11] [-i identity_file]
+           [-J destination] [-L address] [-l login_name] [-m mac_spec]
+           [-O ctl_cmd] [-o option] [-P tag] [-p port] [-R address]
+           [-S ctl_path] [-W host:port] [-w local_tun[:remote_tun]]
+           destination [command [argument ...]]
+       ssh [-Q query_option]
+
+
+
+bandit16@bandit:/tmp/random_sshkey1$ ssh -i private.key bandit17@localhost
+The authenticity of host 'localhost (127.0.0.1)' can't be established.
+ED25519 key fingerprint is SHA256:C2ihUBV7ihnV1wUXRb4RrEcLfXC5CXlhmAAM/urerLY.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Could not create directory '/home/bandit16/.ssh' (Permission denied).
+Failed to add the host to the list of known hosts (/home/bandit16/.ssh/known_hosts).
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+!!! You are trying to log into this SSH server on port 22, which is not intended.
+!!! If you are trying to log in to an OverTheWire game, use the port mentioned in
+!!! the "SSH Information" on that game's webpage (in the top left corner).
+
+bandit17@localhost: Permission denied (publickey).
+
+
+bandit16@bandit:/tmp/random_sshkey1$ ssh -i private.key -p 2220 bandit17@localhost
+The authenticity of host '[localhost]:2220 ([127.0.0.1]:2220)' can't be established.
+ED25519 key fingerprint is SHA256:C2ihUBV7ihnV1wUXRb4RrEcLfXC5CXlhmAAM/urerLY.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Could not create directory '/home/bandit16/.ssh' (Permission denied).
+Failed to add the host to the list of known hosts (/home/bandit16/.ssh/known_hosts).
+                         _                     _ _ _
+                        | |__   __ _ _ __   __| (_) |_
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+!!! You are trying to log into this SSH server with a password on port 2220 from localhost.
+!!! Connecting from localhost is blocked to conserve resources.
+!!! Please log out and log in again.
+
+backend: gibson-1
+Received disconnect from 127.0.0.1 port 2220:2: no authentication methods enabled
+Disconnected from 127.0.0.1 port 2220
+```
+
+
+tässä muutin sen oikeuden, mutta muuten jatkui:
+
+```
+bandit16@bandit:/tmp/random_sshkey1$ chmod 600 private.key
+bandit16@bandit:/tmp/random_sshkey1$ ls -l
+total 4
+-rw------- 1 bandit16 bandit16 1675 Apr 29 11:49 private.key
+
+
+bandit16@bandit:/tmp/random_sshkey1$ ssh -i private.key bandit17@bandit.labs.overthewire.org -p 2220
+The authenticity of host '[bandit.labs.overthewire.org]:2220 ([127.0.0.1]:2220)' can't be established.
+ED25519 key fingerprint is SHA256:C2ihUBV7ihnV1wUXRb4RrEcLfXC5CXlhmAAM/urerLY.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Could not create directory '/home/bandit16/.ssh' (Permission denied).
+Failed to add the host to the list of known hosts (/home/bandit16/.ssh/known_hosts).
+                         _                     _ _ _
+                        | |__   __ _ _ __   __| (_) |_
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+!!! You are trying to log into this SSH server with a password on port 2220 from localhost.
+!!! Connecting from localhost is blocked to conserve resources.
+!!! Please log out and log in again.
+
+backend: gibson-1
+Received disconnect from 127.0.0.1 port 2220:2: no authentication methods enabled
+Disconnected from 127.0.0.1 port 2220
+```
+
+## real ratkaisu vaihe
+
+Mitä neuvoksi, jouduttiin tekee samanaikaisemman menetelmänsä, eli jouduttaan kopioida toi ---RSA PRIVATEY-- työasemaan/lokaaliseen tiedostonsa.
+
+
+Eli jatkuu normaalisti powershell kautta:
+- eli luodaan tiedosto ja märitettään oikeuden asetukset
+```
+PS C:\Users\zirco-\Documents> New-Item private.key -ItemType File
+
+
+    Directory: C:\Users\zirco-\Documents
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        04/29/2026     14:59              0 private.key
+
+
+PS C:\Users\zirco-\Documents> notepad private.key
+PS C:\Users\zirco-\Documents> icacls private.key /inheritance:r
+processed file: private.key
+Successfully processed 1 files; Failed processing 0 files
+PS C:\Users\zirco-\Documents> icacls private.key /grant:r "$($env:zirco-):R"
+>>
+>> ^C
+PS C:\Users\zirco-\Documents> icacls private.key /grant:r "zirco-:R"
+processed file: private.key
+Successfully processed 1 files; Failed processing 0 files
+```
+
+Nyt kokeillaan kirjautua Bandit17 tasoon, eli avaimen kautta kuin yhdistää siihen yhteyttä:
+- tämä vähä kuin syöttää sen `private.key` jonka kopsatiin että suorittaa sen kirjauttuisen menetelmän että ilman syöttämistä salasanaa.
+- periaatteessa `private.key` on se salasana , mutta kuljettu toisenlaisella tavalla - sama idea kuin aikaisempi harjoitus
+
+```
+PS C:\Users\zirco-\Documents> ssh -i .\private.key -p 2220 bandit17@bandit.labs.overthewire.org
+                         _                     _ _ _
+                        | |__   __ _ _ __   __| (_) |_
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+
+      ,----..            ,----,          .---.
+     /   /   \         ,/   .`|         /. ./|
+    /   .     :      ,`   .'  :     .--'.  ' ;
+   .   /   ;.  \   ;    ;     /    /__./ \ : |
+  .   ;   /  ` ; .'___,/    ,' .--'.  '   \' .
+  ;   |  ; \ ; | |    :     | /___/ \ |    ' '
+  |   :  | ; | ' ;    |.';  ; ;   \  \;      :
+  .   |  ' ' ' : `----'  |  |  \   ;  `      |
+  '   ;  \; /  |     '   :  ;   .   \    .\  ;
+   \   \  ',  /      |   |  '    \   \   ' \ |
+    ;   :    /       '   :  |     :   '  |--"
+     \   \ .'        ;   |.'       \   \ ;
+  www. `---` ver     '---' he       '---" ire.org
+
+
+Welcome to OverTheWire!
+
+If you find any problems, please report them to the #wargames channel on
+discord or IRC.
+
+--[ Playing the games ]--
+
+  This machine might hold several wargames.
+  If you are playing "somegame", then:
+
+    * USERNAMES are somegame0, somegame1, ...
+    * Most LEVELS are stored in /somegame/.
+    * PASSWORDS for each level are stored in /etc/somegame_pass/.
+
+  Write-access to homedirectories is disabled. It is advised to create a
+  working directory with a hard-to-guess name in /tmp/.  You can use the
+  command "mktemp -d" in order to generate a random and hard to guess
+  directory in /tmp/.  Read-access to both /tmp/ is disabled and to /proc
+  restricted so that users cannot snoop on eachother. Files and directories
+  with easily guessable or short names will be periodically deleted! The /tmp
+  directory is regularly wiped.
+  Please play nice:
+
+    * don't leave orphan processes running
+    * don't leave exploit-files laying around
+    * don't annoy other players
+    * don't post passwords or spoilers
+    * again, DONT POST SPOILERS!
+      This includes writeups of your solution on your blog or website!
+
+--[ Tips ]--
+
+  This machine has a 64bit processor and many security-features enabled
+  by default, although ASLR has been switched off.  The following
+  compiler flags might be interesting:
+
+    -m32                    compile for 32bit
+    -fno-stack-protector    disable ProPolice
+    -Wl,-z,norelro          disable relro
+
+  In addition, the execstack tool can be used to flag the stack as
+  executable on ELF binaries.
+
+  Finally, network-access is limited for most levels by a local
+  firewall.
+
+--[ Tools ]--
+
+ For your convenience we have installed a few useful tools which you can find
+ in the following locations:
+
+    * gef (https://github.com/hugsy/gef) in /opt/gef/
+    * pwndbg (https://github.com/pwndbg/pwndbg) in /opt/pwndbg/
+    * gdbinit (https://github.com/gdbinit/Gdbinit) in /opt/gdbinit/
+    * pwntools (https://github.com/Gallopsled/pwntools)
+    * radare2 (http://www.radare.org/)
+
+--[ More information ]--
+
+  For more information regarding individual wargames, visit
+  http://www.overthewire.org/wargames/
+
+  For support, questions or comments, contact us on discord or IRC.
+
+  Enjoy your stay!
+
+bandit17@bandit:~$ ls
+passwords.new  passwords.old
+bandit17@bandit:~$ whoami
+bandit17
+bandit17@bandit:~$ cat passwords.new
+l48kFEV9T4L7QR4n7aSxxiS7tWKNlM03
+YowiCeTsti6dcSmrzZjBKOFo5YYd3BOH
+....
+.......
+9ci9bahg8ZyDnwaRJyEgRmmb0UBn950U
+
+bandit17@bandit:~$ cat passwords.old
+l48kFEV9T4L7QR4n7aSxxiS7tWKNlM03
+YowiCeTsti6dcSmrzZjBKOFo5YYd3BOH
+....
+.......
+9ci9bahg8ZyDnwaRJyEgRmmb0UBn950U
+
+
+
+
+bandit17@bandit:~$ cat /etc/bandit_pass/bandit17
+EReVavePLFHtFlFsjn3hyzMlvSuSAcRD
+```
+
+# level 17
+
+Jatkossa voi kirjautua tällä salasanalla, ettei tarvi palata takaisin tasoon 16: EReVavePLFHtFlFsjn3hyzMlvSuSAcRD
 
