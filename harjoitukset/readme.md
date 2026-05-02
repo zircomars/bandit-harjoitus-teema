@@ -77,4 +77,9 @@ file (1)             - determine file type
 ```
 > whatis doff
 doff (1)             - read file inside what's difference
+> whatis cron
+cron (8)         - daemon to execute scheduled commands (Vixie Cron)
+> whatis crontab
+crontab (1)      - maintain crontab files for individual users (Vixie Cron)
+crontab (5)      - tables for driving cron
 ```
