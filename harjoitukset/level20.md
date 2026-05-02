@@ -230,3 +230,8 @@ Yhteenveto:
 - Portit < 1024 → vaativat root-oikeudet → eivät toimi tässä tapauksessa
 - Portit ≥ 1024 → toimivat normaalilla käyttäjällä
 
+## linkkejä:
+
+- https://david-varghese.medium.com/overthewire-bandit-level-20-level-21-cc769247866a
+- https://mayadevbe.me/posts/overthewire/bandit/level21/
+- https://medium.com/secttp/overthewire-bandit-level-20-a1af9a042c56
