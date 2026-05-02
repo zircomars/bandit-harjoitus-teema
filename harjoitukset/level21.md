@@ -164,6 +164,11 @@ Yhteenveto:
 - `crontab` = työkalu ajastusten hallintaan  
 - `man 5 crontab` = ohje syntaksille  
 
+lukemista ja ohjeita:
+- https://man7.org/linux/man-pages/man5/crontab.5.html
+- https://www.linux.fi/wiki/Komentojen_ajastaminen
+
+---
 
 ## tarkistus ja testaukset
 
