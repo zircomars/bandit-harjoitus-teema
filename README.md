@@ -4,6 +4,8 @@ pieni harjoittelu, perus linux komentoja ja järjestelmän perusominaisuutta. T�
 - **Tarkoitus:** Bandit on tarkoitettu aloittelijoille ja se keskittyy komentorivikäytön, tiedostojärjestelmän ja perus-hakkeroinnin opetteluun.
 - **Teema:** Bandit on parhaiten tunnettu sen simppelistä ja suoraviivaisesta lähestymistavastaan. Haasteet käsittelevät pääasiassa oikeuksia, tiedostoja, hakemistoja ja salasanan murtamista.
 
+> Pieni huomioina, että kaikki tasot vastaukset löytyy netistä, mutta riippuu koska ne on julkaistu esim. **yli 2-5vuotta** vanhoja bloggeja julkaisuja. Jos testaa itse sen vastauksen mukaan ei välttämättä mee just kirjan mukaan että joutuu kulkea vähä mutkan kautta ja keksiä toinen ratkaisu tai muu tapa. Näitä julkaisuja ja bloggje kantsii lukea esim. kommenttista (jos on) ja etsiä muilta sivustoilta apua.
+
 ![alt text](images/Bandit-page.png)
 
 ## harjoitus linkki:
